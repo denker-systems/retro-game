@@ -1,0 +1,13 @@
+# Compiled files
+*.exe
+*.obj
+*.o
+*.map
+*.err
+
+# DOSBox
+*.conf
+
+# Editor backups
+*~
+*.bak

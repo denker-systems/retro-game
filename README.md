@@ -24,7 +24,9 @@ retro-game/
 │   ├── player.c            # Spelarlogik och fysik
 │   ├── level.c             # Nivådata och kollision
 │   ├── menu.c              # Startmeny och pausmeny
-│   └── game.c              # Spelinstans och save/load
+│   ├── game.c              # Spelinstans och save/load
+│   ├── sound.c             # Ljudeffekter (SB + PC Speaker)
+│   └── mixer.c             # Software audio mixer
 │
 ├── include/                # Header-filer (gränssnitt)
 │   ├── types.h             # Gemensamma typer och konstanter
@@ -33,7 +35,12 @@ retro-game/
 │   ├── player.h            # Player-struktur och funktioner
 │   ├── level.h             # Nivåfunktioner
 │   ├── menu.h              # Meny-funktioner
-│   └── game.h              # GameState och save/load
+│   ├── game.h              # GameState och save/load
+│   ├── sound.h             # Ljud-API
+│   └── mixer.h             # Mixer-API
+│
+├── SOUNDS/                 # Ljudfiler (WAV)
+│   └── MAINMENU.WAV        # Menymusik
 │
 └── .windsurf/              # IDE-konfiguration
     ├── rules/              # AI-regler för projektet
@@ -91,9 +98,15 @@ dosbox-x game.exe
 - **Startmeny** - NEW GAME, CONTINUE, QUIT
 - **Pausmeny** - RESUME, SAVE, MENU
 - **Save/Load** - Spara till GAME.SAV (DOS-style binärfil)
+- **Musik** - WAV-streaming via Sound Blaster
+- **Ljudeffekter** - Mixas med musik i realtid
+- **PC Speaker fallback** - Om Sound Blaster saknas
 
 ## Teknisk info
 
 - **Grafik:** VGA Mode 13h (320×200, 256 färger)
 - **Double buffering:** Flimmerfri rendering
+- **Ljud:** Sound Blaster (port 0x220, IRQ 7, DMA 1)
+- **Audio mixer:** Software mixing, double-buffered DMA
+- **Sample rate:** 11025 Hz, 8-bit unsigned PCM
 - **Målplattform:** MS-DOS / IBM PC-kompatibel

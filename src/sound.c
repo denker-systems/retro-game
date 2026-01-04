@@ -16,6 +16,10 @@
 #include <stdio.h>
 #include <malloc.h>
 #include "sound.h"
+#include "mixer.h"
+
+/* Mixer status */
+static int mixer_initialized = 0;
 
 /* Debug-loggning */
 static FILE *dbg = NULL;
@@ -280,13 +284,13 @@ static void generate_sfx(unsigned int freq, unsigned int len)
         if (sfx_buffer == NULL) return;
     }
     
-    /* Generera fyrkantvåg */
+    /* Generera fyrkantvåg (lägre amplitud för att passa med musik) */
     period = 11025 / freq;
     for (i = 0; i < len && i < 4000; i++) {
         if ((i / period) % 2) {
-            sfx_buffer[i] = 200;  /* Hög */
+            sfx_buffer[i] = 160;  /* Hög (sänkt från 200) */
         } else {
-            sfx_buffer[i] = 56;   /* Låg */
+            sfx_buffer[i] = 96;   /* Låg (höjt från 56) */
         }
     }
 }
@@ -295,7 +299,29 @@ void sound_play(int effect)
 {
     debug_log_int("sound_play effect =", effect);
     
-    /* Försök Sound Blaster först */
+    /* Om mixer är igång, använd den för SFX */
+    if (mixer_initialized) {
+        switch (effect) {
+            case SFX_JUMP:
+                generate_sfx(800, 2000);
+                mixer_play_sfx(sfx_buffer, 2000, 0);
+                return;
+            case SFX_MENU_MOVE:
+                generate_sfx(600, 1500);
+                mixer_play_sfx(sfx_buffer, 1500, 0);
+                return;
+            case SFX_MENU_SELECT:
+                generate_sfx(1000, 2000);
+                mixer_play_sfx(sfx_buffer, 2000, 0);
+                return;
+            case SFX_LAND:
+                generate_sfx(300, 1500);
+                mixer_play_sfx(sfx_buffer, 1500, 0);
+                return;
+        }
+    }
+    
+    /* Fallback: direkt SB (utan mixer) */
     if (sb_detected) {
         switch (effect) {
             case SFX_JUMP:
@@ -351,23 +377,41 @@ void sound_jingle(int type)
     }
 }
 
-/* Dummy-funktioner för musik (gör inget) */
+/* ========== MUSIK VIA MIXER ========== */
+
 int music_play(const char *filename, int loop)
 {
-    (void)filename;
-    (void)loop;
-    return 0;
+    debug_log("music_play via mixer");
+    
+    if (!mixer_initialized) {
+        if (mixer_init()) {
+            mixer_initialized = 1;
+            mixer_start();
+            debug_log("Mixer startad");
+        } else {
+            debug_log("ERROR: Mixer init misslyckades");
+            return 0;
+        }
+    }
+    
+    return mixer_play_music(filename, loop);
 }
 
 void music_stop(void)
 {
+    if (mixer_initialized) {
+        mixer_stop_music();
+    }
 }
 
 void music_update(void)
 {
+    if (mixer_initialized) {
+        mixer_update();
+    }
 }
 
 int music_playing(void)
 {
-    return 0;
+    return 0;  /* TODO: implementera */
 }

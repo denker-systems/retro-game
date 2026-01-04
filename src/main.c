@@ -143,6 +143,9 @@ int main(void) {
          */
         input_update(&input);
         
+        /* Uppdatera ljudmixer */
+        music_update();
+        
         /* ----- PAUSE CHECK ----- */
         
         if (input.pause) {

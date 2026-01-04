@@ -146,7 +146,7 @@ int menu_show(int has_save)
     while (1) {
         input_update(&input);
         
-        /* Uppdatera musik-streaming */
+        /* Uppdatera mixer ofta för låg latens */
         music_update();
         
         if (input.enter) {
@@ -215,6 +215,7 @@ int pause_show(void)
     
     while (1) {
         input_update(&input);
+        music_update();
         
         if (input.pause) {
             return PAUSE_RESUME;

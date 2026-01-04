@@ -47,7 +47,9 @@ retro-game/
 │   ├── player.c            # Spelarlogik och fysik
 │   ├── level.c             # Nivådata och kollision
 │   ├── menu.c              # Startmeny och pausmeny
-│   └── game.c              # Spelinstans och save/load
+│   ├── game.c              # Spelinstans och save/load
+│   ├── sound.c             # Ljudeffekter (SB + PC Speaker)
+│   └── mixer.c             # Software audio mixer
 │
 ├── include/                # Header-filer (gränssnitt)
 │   ├── types.h             # Gemensamma typer och konstanter
@@ -56,7 +58,12 @@ retro-game/
 │   ├── player.h            # Player-struktur och funktioner
 │   ├── level.h             # Nivåfunktioner
 │   ├── menu.h              # Meny-deklarationer
-│   └── game.h              # GameState och save/load
+│   ├── game.h              # GameState och save/load
+│   ├── sound.h             # Ljud-API
+│   └── mixer.h             # Mixer-API
+│
+├── SOUNDS/                 # Ljudfiler
+│   └── MAINMENU.WAV        # Menymusik (8-bit PCM)
 │
 ├── docs/                   # Dokumentation
 │   ├── ARCHITECTURE.md     # Detta dokument
@@ -222,3 +229,63 @@ typedef struct {
 - `game_save()` - Sparar till GAME.SAV
 - `game_load()` - Laddar från GAME.SAV
 - `game_exists()` - Kontrollerar om sparfil finns
+
+### sound.c - Ljudeffekter
+
+**Ansvar:** Högnivå-API för ljud, PC Speaker fallback.
+
+**Funktioner:**
+| Funktion | Beskrivning |
+|----------|-------------|
+| `sound_init()` | Detekterar Sound Blaster |
+| `sound_close()` | Frigör resurser |
+| `sound_play(effect)` | Spelar ljudeffekt |
+| `music_play(file, loop)` | Startar musik-streaming |
+| `music_stop()` | Stoppar musik |
+| `music_update()` | Uppdaterar mixer (anropa varje frame!) |
+
+**Ljudeffekter:**
+- `SFX_JUMP` - Hopp
+- `SFX_MENU_MOVE` - Menynavigering
+- `SFX_MENU_SELECT` - Menyval
+- `SFX_LAND` - Landning
+
+### mixer.c - Audio Mixer
+
+**Ansvar:** Software mixing av musik + SFX via Sound Blaster.
+
+**Arkitektur:**
+```
+┌─────────────────────────────────────────────────┐
+│                  mixer.c                         │
+├─────────────────────────────────────────────────┤
+│  ┌──────────┐    ┌──────────┐                   │
+│  │ Buffer A │◀──▶│ Buffer B │  Double-buffer    │
+│  └──────────┘    └──────────┘                   │
+│       │                                          │
+│       ▼                                          │
+│  ┌──────────────────────────────────┐           │
+│  │         mixer_fill_buffer()      │           │
+│  │   Musik (WAV) + SFX → Mixad PCM  │           │
+│  └──────────────────────────────────┘           │
+│       │                                          │
+│       ▼                                          │
+│  ┌──────────────────────────────────┐           │
+│  │         DMA Kanal 1              │           │
+│  │      Auto-init mode              │           │
+│  └──────────────────────────────────┘           │
+│       │                                          │
+│       ▼                                          │
+│  ┌──────────────────────────────────┐           │
+│  │      Sound Blaster DSP           │           │
+│  │         Port 0x220               │           │
+│  └──────────────────────────────────┘           │
+└─────────────────────────────────────────────────┘
+```
+
+**Tekniska detaljer:**
+- Buffer: 2048 bytes (~185ms latens)
+- Sample rate: 11025 Hz
+- Format: 8-bit unsigned PCM
+- Max 4 samtidiga SFX-kanaler
+- IRQ 7 för buffert-byte

@@ -32,9 +32,16 @@ winget install joncampbell123.DOSBox-X
 
 ### Snabbkommando
 ```powershell
+# Använd build.bat
+.\build.bat
+```
+
+Eller manuellt:
+```powershell
 $env:WATCOM = "C:\WATCOM"
 $env:PATH = "$env:WATCOM\binnt64;$env:WATCOM\binnt;$env:PATH"
-C:\WATCOM\binnt64\wcl.exe -0 -ms -i=include src\main.c src\vga.c src\input.c src\player.c src\level.c src\menu.c src\game.c -fe=game
+$env:INCLUDE = "$env:WATCOM\h"
+wcl -0 -ms -i=include -i=$env:WATCOM\h src\main.c src\vga.c src\input.c src\player.c src\level.c src\menu.c src\game.c src\sound.c src\mixer.c -fe=game
 ```
 
 ### Flaggor förklarade
@@ -89,6 +96,14 @@ Kontrollera att:
 
 ### Skärmen blinkar/flimrar
 Vsync fungerar inte korrekt. Kontrollera `vga_vsync()` anropas före `vga_flip()`.
+
+### Inget ljud
+1. Kontrollera att DOSBox-X har Sound Blaster aktiverat
+2. Sätt BLASTER-miljövariabel: `SET BLASTER=A220 I7 D1 T4`
+3. Kolla DEBUG.TXT för felmeddelanden
+
+### Musik hackar/loopas konstigt
+- Se till att `music_update()` anropas i varje loop (main, menu, pause)
 
 ## Makefile (valfritt)
 

@@ -69,7 +69,7 @@
  * 
  * Total hopphöjd ≈ 8+7+6+5+4+3+2+1 = 36 pixlar
  */
-#define JUMP_FORCE -8
+#define JUMP_FORCE -20
 
 /*
  * MOVE_SPEED - Horisontell hastighet i pixlar per frame

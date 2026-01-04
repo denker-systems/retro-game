@@ -6,11 +6,12 @@ trigger: always_on
 
 <open_watcom>
 Kompilera med:
-wcl -0 -ms src\*.c -fe=game.exe
+wcl -0 -ms -i=include src\*.c -fe=game.exe
 
 Flaggor:
 - -0 = 8086-kompatibel kod
 - -ms = Small memory model
+- -i=include = Sökväg för header-filer
 - -fe= = Output-filnamn
 </open_watcom>
 

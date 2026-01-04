@@ -5,13 +5,24 @@ Ett minimalt Mario-liknande plattformsspel för MS-DOS, skrivet i C.
 ## Projektstruktur
 
 ```
-src/
-├── main.c      # Huvudprogram och spelloop
-├── vga.c/h     # VGA Mode 13h grafik
-├── input.c/h   # Tangentbordshantering  
-├── player.c/h  # Spelarlogik och fysik
-├── level.c/h   # Nivådata och kollisioner
-└── types.h     # Gemensamma typer
+retro-game/
+├── src/                    # Källkod (implementation)
+│   ├── main.c              # Entry point och spelloop
+│   ├── vga.c               # VGA-grafikimplementation
+│   ├── input.c             # Tangentbordshantering
+│   ├── player.c            # Spelarlogik och fysik
+│   └── level.c             # Nivådata och kollision
+│
+├── include/                # Header-filer (gränssnitt)
+│   ├── types.h             # Gemensamma typer och konstanter
+│   ├── vga.h               # VGA-funktionsdeklarationer
+│   ├── input.h             # Input-strukturer och funktioner
+│   ├── player.h            # Player-struktur och funktioner
+│   └── level.h             # Nivåfunktioner
+│
+└── .windsurf/              # IDE-konfiguration
+    ├── rules/              # AI-regler för projektet
+    └── workflows/          # Interaktiva kommandon
 ```
 
 ## Krav
@@ -28,12 +39,13 @@ src/
 ## Kompilera
 
 ```batch
-wcl -0 -ms src\*.c -fe=game.exe
+wcl -0 -ms -i=include src\*.c -fe=game.exe
 ```
 
 Flaggor:
 - `-0` = 8086-kompatibel kod  
 - `-ms` = Small memory model
+- `-i=include` = Sökväg för header-filer
 - `-fe=game.exe` = Output-filnamn
 
 ## Köra

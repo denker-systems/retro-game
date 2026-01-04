@@ -1,0 +1,144 @@
+=== sound_init ===
+Provar SB reset...
+SB HITTAD!
+Speaker ON
+DMA-buffert allokerad
+sb_detected = 1
+sound_play effect = 1
+--- sb_play_sample ---
+length = 1500
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 1
+--- sb_play_sample ---
+length = 1500
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 1
+--- sb_play_sample ---
+length = 1500
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 1
+--- sb_play_sample ---
+length = 1500
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 1
+--- sb_play_sample ---
+length = 1500
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 1
+--- sb_play_sample ---
+length = 1500
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 1
+--- sb_play_sample ---
+length = 1500
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 1
+--- sb_play_sample ---
+length = 1500
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 2
+--- sb_play_sample ---
+length = 2000
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 1
+--- sb_play_sample ---
+length = 1500
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 1
+--- sb_play_sample ---
+length = 1500
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 2
+--- sb_play_sample ---
+length = 2000
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 1
+--- sb_play_sample ---
+length = 1500
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 1
+--- sb_play_sample ---
+length = 1500
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+sound_play effect = 2
+--- sb_play_sample ---
+length = 2000
+rate = 11025
+Data kopierad till DMA-buffert
+phys_addr = 0x1F798
+DMA konfigurerad
+time_const = 166
+Uppspelning startad!
+=== sound_close ===
+SB Speaker OFF
+DMA-buffert frigjord

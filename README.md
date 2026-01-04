@@ -22,14 +22,18 @@ retro-game/
 │   ├── vga.c               # VGA-grafikimplementation
 │   ├── input.c             # Tangentbordshantering
 │   ├── player.c            # Spelarlogik och fysik
-│   └── level.c             # Nivådata och kollision
+│   ├── level.c             # Nivådata och kollision
+│   ├── menu.c              # Startmeny och pausmeny
+│   └── game.c              # Spelinstans och save/load
 │
 ├── include/                # Header-filer (gränssnitt)
 │   ├── types.h             # Gemensamma typer och konstanter
 │   ├── vga.h               # VGA-funktionsdeklarationer
 │   ├── input.h             # Input-strukturer och funktioner
 │   ├── player.h            # Player-struktur och funktioner
-│   └── level.h             # Nivåfunktioner
+│   ├── level.h             # Nivåfunktioner
+│   ├── menu.h              # Meny-funktioner
+│   └── game.h              # GameState och save/load
 │
 └── .windsurf/              # IDE-konfiguration
     ├── rules/              # AI-regler för projektet
@@ -67,11 +71,26 @@ dosbox-x game.exe
 
 ## Kontroller
 
+### I spelet
 | Tangent | Funktion |
 |---------|----------|
 | ← → | Gå vänster/höger |
 | Mellanslag | Hoppa |
+| P | Pausa |
 | ESC | Avsluta |
+
+### I menyer
+| Tangent | Funktion |
+|---------|----------|
+| ↑ ↓ | Navigera |
+| Enter | Välj |
+| ESC | Avsluta |
+
+## Features
+
+- **Startmeny** - NEW GAME, CONTINUE, QUIT
+- **Pausmeny** - RESUME, SAVE, MENU
+- **Save/Load** - Spara till GAME.SAV (DOS-style binärfil)
 
 ## Teknisk info
 

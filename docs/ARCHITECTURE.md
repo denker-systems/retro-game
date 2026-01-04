@@ -45,14 +45,18 @@ retro-game/
 │   ├── vga.c               # VGA-grafikimplementation
 │   ├── input.c             # Tangentbordshantering
 │   ├── player.c            # Spelarlogik och fysik
-│   └── level.c             # Nivådata och kollision
+│   ├── level.c             # Nivådata och kollision
+│   ├── menu.c              # Startmeny och pausmeny
+│   └── game.c              # Spelinstans och save/load
 │
 ├── include/                # Header-filer (gränssnitt)
 │   ├── types.h             # Gemensamma typer och konstanter
 │   ├── vga.h               # VGA-funktionsdeklarationer
 │   ├── input.h             # Input-strukturer och funktioner
 │   ├── player.h            # Player-struktur och funktioner
-│   └── level.h             # Nivåfunktioner
+│   ├── level.h             # Nivåfunktioner
+│   ├── menu.h              # Meny-deklarationer
+│   └── game.h              # GameState och save/load
 │
 ├── docs/                   # Dokumentation
 │   ├── ARCHITECTURE.md     # Detta dokument
@@ -111,10 +115,12 @@ while (!quit) {
 **InputState struktur:**
 ```c
 typedef struct {
-    int left;   /* Vänsterpil nedtryckt */
-    int right;  /* Högerpil nedtryckt */
-    int jump;   /* Mellanslag (one-shot) */
-    int quit;   /* ESC trycktes */
+    int left, right;  /* Piltangenter */
+    int up, down;     /* Menynavigering */
+    int jump;         /* Mellanslag */
+    int enter;        /* Enter (menyval) */
+    int pause;        /* P-tangent */
+    int quit;         /* ESC */
 } InputState;
 ```
 
@@ -174,11 +180,45 @@ A.top < B.bottom  OCH  A.bottom > B.top
 ## Beroenden
 
 ```
-main.c ──────▶ vga.h, input.h, player.h, level.h, types.h
+main.c ──────▶ vga.h, input.h, player.h, level.h, menu.h, game.h
 player.c ────▶ player.h, level.h, vga.h, types.h
 level.c ─────▶ level.h, vga.h
 vga.c ───────▶ vga.h, types.h
 input.c ─────▶ input.h
+menu.c ──────▶ menu.h, vga.h, input.h
+game.c ──────▶ game.h, player.h
 ```
 
 **Regel:** Inga cirkulära beroenden! vga.c känner INTE till player.c.
+
+### menu.c - Menysystem
+
+**Ansvar:** Startmeny och pausmeny med bitmap-font.
+
+**Funktioner:**
+- `menu_show(has_save)` - Huvudmeny (NEW GAME, CONTINUE, QUIT)
+- `pause_show()` - Pausmeny (RESUME, SAVE, MENU)
+
+**Helper-funktioner:**
+- `clear_input()` - Rensar tangentbordsbuffern
+- `wait_key_release()` - Debounce för menynavigering
+
+### game.c - Spelinstans
+
+**Ansvar:** Spara och ladda speldata (DOS-style binärfil).
+
+**GameState struktur:**
+```c
+typedef struct {
+    int player_x, player_y;   /* Spelarposition */
+    int player_vy;            /* Hastighet */
+    int score, level;         /* Statistik */
+    unsigned int magic;       /* Verifieringsnummer */
+} GameState;
+```
+
+**Funktioner:**
+- `game_new()` - Skapar ny spelinstans
+- `game_save()` - Sparar till GAME.SAV
+- `game_load()` - Laddar från GAME.SAV
+- `game_exists()` - Kontrollerar om sparfil finns

@@ -38,6 +38,7 @@
 #include "level.h"
 #include "vga.h"
 #include "types.h"
+#include "sound.h"
 
 /*
  * GRAVITY - Hur mycket hastigheten ökar varje frame
@@ -183,21 +184,9 @@ void player_update(Player *p, int left, int right, int jump) {
      * Detta förhindrar "lufthopp" (hoppa i luften).
      */
     if (jump && p->on_ground) {
-        /*
-         * Sätt vertikal hastighet uppåt
-         * 
-         * JUMP_FORCE är negativ (-8) eftersom Y-axeln är inverterad.
-         * Detta ger spelaren omedelbar uppåthastighet.
-         */
         p->vy = JUMP_FORCE;
-        
-        /*
-         * Spelaren är inte längre på marken
-         * 
-         * Detta förhindrar ytterligare hopp nästa frame
-         * även om jump-input fortfarande skulle vara aktiv.
-         */
         p->on_ground = 0;
+        sound_play(SFX_JUMP);
     }
     
     /* ========== GRAVITATION ========== */

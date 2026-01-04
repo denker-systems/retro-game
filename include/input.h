@@ -7,7 +7,11 @@
 typedef struct {
     int left;
     int right;
+    int up;
+    int down;
     int jump;
+    int enter;
+    int pause;
     int quit;
 } InputState;
 

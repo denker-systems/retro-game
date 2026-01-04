@@ -75,7 +75,11 @@ void input_update(InputState *state) {
      * Om vi inte nollställer kommer spelaren hoppa varje frame
      * så länge mellanslag hålls nere (inte önskat beteende).
      */
+    state->up = 0;
+    state->down = 0;
     state->jump = 0;
+    state->enter = 0;
+    state->pause = 0;
     
     /*
      * Läs alla väntande tangenter
@@ -120,11 +124,9 @@ void input_update(InputState *state) {
                  * det görs av main.c efter player_update().
                  */
                 case 75: state->left = 1; break;
-                
-                /*
-                 * Scan code 77 (0x4D) = Högerpil
-                 */
                 case 77: state->right = 1; break;
+                case 72: state->up = 1; break;    /* Upp */
+                case 80: state->down = 1; break;  /* Ner */
             }
         } else {
             /*
@@ -150,6 +152,15 @@ void input_update(InputState *state) {
                  * så hoppet registreras bara en gång per tryck.
                  */
                 case 32: state->jump = 1; break;
+                
+                /*
+                 * ASCII 112 = 'p' (Pause)
+                 * ASCII 80 = 'P' (Pause)
+                 */
+                case 'p':
+                case 'P': state->pause = 1; break;
+                
+                case 13: state->enter = 1; break;  /* Enter */
             }
         }
     }

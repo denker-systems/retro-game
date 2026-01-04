@@ -53,6 +53,9 @@
 #include "input.h"   /* InputState, input_update() */
 #include "player.h"  /* Player, player_init(), player_update(), player_draw() */
 #include "level.h"   /* level_init(), level_draw() */
+#include "menu.h"    /* menu_show(), pause_show() */
+#include "game.h"    /* GameState, game_save(), game_load() */
+#include "sound.h"   /* sound_init(), sound_play() */
 
 /*
  * main - Programmets startpunkt
@@ -78,50 +81,43 @@ int main(void) {
      * - Stack-allokering är snabbare och enklare
      */
     Player player;
-    
-    /*
-     * InputState input - Tangentbordstillstånd
-     * 
-     * Struct som håller reda på vilka tangenter som är nedtryckta.
-     * Initierad till {0, 0, 0, 0} = alla falska (ingen knapp nedtryckt).
-     * 
-     * Fält: left, right, jump, quit
-     */
-    InputState input = {0, 0, 0, 0};
+    GameState state;
+    InputState input = {0, 0, 0, 0, 0, 0, 0, 0};
+    int menu_choice;
+    int pause_choice;
     
     /* ========== INITIERING ========== */
     
-    /*
-     * Initiera VGA-grafik
-     * 
-     * Detta måste göras FÖRST eftersom:
-     * 1. Allokerar dubbelbuffern (behövs för ritning)
-     * 2. Sätter skärmen i Mode 13h (grafikläge)
-     * 
-     * Efter detta anrop är skärmen i grafikläge och
-     * normal textutskrift fungerar inte längre!
-     */
     vga_init();
-    
-    /*
-     * Initiera nivån
-     * 
-     * Just nu gör detta ingenting (nivådata är hårdkodad),
-     * men i ett större spel skulle detta ladda nivåfilen.
-     */
+    sound_init();
     level_init();
     
-    /*
-     * Initiera spelaren
-     * 
-     * Placerar spelaren på position (50, 150).
-     * Y=150 är lite ovanför marken (Y=180), så spelaren
-     * kommer att falla ner och landa på första frame.
-     * 
-     * &player = "adressen till player-variabeln"
-     * Funktionen behöver en pekare för att kunna modifiera player.
-     */
-    player_init(&player, 50, 150);
+    /* Spela intro-jingle */
+    sound_jingle(JINGLE_INTRO);
+    
+    /* ========== MENY-LOOP ========== */
+    
+    while (1) {
+        /* Visa huvudmeny - visa CONTINUE om sparfil finns */
+        menu_choice = menu_show(game_exists());
+        
+        if (menu_choice == MENU_QUIT) {
+            break;
+        }
+        
+        if (menu_choice == MENU_NEW) {
+            /* Nytt spel */
+            game_new(&state, &player);
+        } else if (menu_choice == MENU_CONTINUE) {
+            /* Ladda sparat spel */
+            if (!game_load(&state, &player)) {
+                /* Om laddning misslyckades, starta nytt */
+                game_new(&state, &player);
+            }
+        }
+        
+        /* Nollställ input */
+        input.quit = 0;
     
     /* ========== HUVUDLOOP ========== */
     
@@ -146,6 +142,21 @@ int main(void) {
          * &input = pekare så funktionen kan modifiera structen
          */
         input_update(&input);
+        
+        /* ----- PAUSE CHECK ----- */
+        
+        if (input.pause) {
+            pause_choice = pause_show();
+            
+            if (pause_choice == PAUSE_SAVE) {
+                /* Spara spelet */
+                game_save(&state, &player);
+            } else if (pause_choice == PAUSE_MENU) {
+                /* Återgå till huvudmenyn */
+                break;
+            }
+            /* PAUSE_RESUME = fortsätt spela (gör inget) */
+        }
         
         /* ----- UPDATE PHASE ----- */
         
@@ -230,6 +241,8 @@ int main(void) {
         vga_flip();
     }
     
+    }  /* Slut på meny-loop */
+    
     /* ========== AVSLUTNING ========== */
     
     /*
@@ -242,6 +255,7 @@ int main(void) {
      * 1. Återställer textläge (Mode 03h)
      * 2. Frigör dubbelbufferns minne
      */
+    sound_close();
     vga_close();
     
     /*

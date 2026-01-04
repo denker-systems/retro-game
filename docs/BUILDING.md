@@ -34,7 +34,7 @@ winget install joncampbell123.DOSBox-X
 ```powershell
 $env:WATCOM = "C:\WATCOM"
 $env:PATH = "$env:WATCOM\binnt64;$env:WATCOM\binnt;$env:PATH"
-C:\WATCOM\binnt64\wcl.exe -0 -ms -i=include src\main.c src\vga.c src\input.c src\player.c src\level.c -fe=game
+C:\WATCOM\binnt64\wcl.exe -0 -ms -i=include src\main.c src\vga.c src\input.c src\player.c src\level.c src\menu.c src\game.c -fe=game
 ```
 
 ### Flaggor förklarade

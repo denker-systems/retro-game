@@ -2,6 +2,17 @@
 
 Ett minimalt Mario-liknande plattformsspel för MS-DOS, skrivet i C.
 
+![Spelet i action](docs/screenshot.png)
+
+## Dokumentation
+
+| Dokument | Beskrivning |
+|----------|-------------|
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Projektstruktur och moduldesign |
+| [BUILDING.md](docs/BUILDING.md) | Kompilering och körning |
+| [LEARNING.md](docs/LEARNING.md) | Lärresurser och övningar |
+| [VGA_REFERENCE.md](docs/VGA_REFERENCE.md) | VGA Mode 13h teknisk referens |
+
 ## Projektstruktur
 
 ```
